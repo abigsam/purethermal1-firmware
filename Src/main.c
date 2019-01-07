@@ -41,8 +41,8 @@
 #include "lepton.h"
 #include "lepton_i2c.h"
 //#include "tmp007_i2c.h"
-//#include "usbd_uvc.h"
-//#include "usbd_uvc_if.h"
+#include "usbd_uvc.h"
+#include "usbd_uvc_if.h"
 DMA_HandleTypeDef hdma_memtomem_dma2_stream0;
 
 #include "tasks.h"
@@ -145,13 +145,14 @@ int main(void)
   initialise_monitor_handles();
 #endif
 
-  HAL_GPIO_WritePin(GPIOA, GPIO_PIN_8, GPIO_PIN_RESET); //LEPTON_PW_DWN_L
+//  HAL_GPIO_WritePin(GPIOA, GPIO_PIN_8, GPIO_PIN_RESET); //LEPTON_PW_DWN_L
+  HAL_GPIO_WritePin(LEPTON_PW_DWN_L_GPIO_Port, LEPTON_PW_DWN_L_Pin, GPIO_PIN_RESET);
   
   /*Fix RX and TX pin switch by setting the following pins */
-  HAL_GPIO_WritePin(GPIOA, GPIO_PIN_5, GPIO_PIN_SET); //ESP_CH_PD
-  HAL_GPIO_WritePin(GPIOA, GPIO_PIN_0, GPIO_PIN_SET); //ESP_GPIO2
-  HAL_GPIO_WritePin(GPIOA, GPIO_PIN_1, GPIO_PIN_SET); //ESP_GPIO0
-  HAL_GPIO_WritePin(GPIOA, GPIO_PIN_7, GPIO_PIN_SET); //ESP_RST
+//  HAL_GPIO_WritePin(GPIOA, GPIO_PIN_5, GPIO_PIN_SET); //ESP_CH_PD
+//  HAL_GPIO_WritePin(GPIOA, GPIO_PIN_0, GPIO_PIN_SET); //ESP_GPIO2
+//  HAL_GPIO_WritePin(GPIOA, GPIO_PIN_1, GPIO_PIN_SET); //ESP_GPIO0
+//  HAL_GPIO_WritePin(GPIOA, GPIO_PIN_7, GPIO_PIN_SET); //ESP_RST
 
   // reinitialize uart with speed from config
   huart2.Init.BaudRate = USART_DEBUG_SPEED;
@@ -225,10 +226,31 @@ static void SystemClock_Config(void)
   RCC_OscInitStruct.HSEState = RCC_HSE_ON;
   RCC_OscInitStruct.PLL.PLLState = RCC_PLL_ON;
   RCC_OscInitStruct.PLL.PLLSource = RCC_PLLSOURCE_HSE;
-  RCC_OscInitStruct.PLL.PLLM = 8;
-  RCC_OscInitStruct.PLL.PLLN = 96;
-  RCC_OscInitStruct.PLL.PLLP = RCC_PLLP_DIV2;
-  RCC_OscInitStruct.PLL.PLLQ = 4;
+  if (pt_board == PT_BOARD_PT1)
+  {
+  	  RCC_OscInitStruct.PLL.PLLM = 11;
+  	  RCC_OscInitStruct.PLL.PLLN = 295;
+  	  RCC_OscInitStruct.PLL.PLLP = RCC_PLLP_DIV4;
+  	  RCC_OscInitStruct.PLL.PLLQ = 8;
+  }
+  else if (pt_board == PT_BOARD_PT2)
+  {
+  	  RCC_OscInitStruct.PLL.PLLM = 4;
+  	  RCC_OscInitStruct.PLL.PLLN = 96;
+  	  RCC_OscInitStruct.PLL.PLLP = RCC_PLLP_DIV2;
+  	  RCC_OscInitStruct.PLL.PLLQ = 4;
+  }
+  else //MINI_THERM_CAM
+  {
+	  RCC_OscInitStruct.PLL.PLLM = 8;
+	  RCC_OscInitStruct.PLL.PLLN = 96;
+	  RCC_OscInitStruct.PLL.PLLP = RCC_PLLP_DIV2;
+	  RCC_OscInitStruct.PLL.PLLQ = 4;
+  }
+//  RCC_OscInitStruct.PLL.PLLM = 8;
+//  RCC_OscInitStruct.PLL.PLLN = 96;
+//  RCC_OscInitStruct.PLL.PLLP = RCC_PLLP_DIV2;
+//  RCC_OscInitStruct.PLL.PLLQ = 4;
   if (HAL_RCC_OscConfig(&RCC_OscInitStruct) != HAL_OK)
   {
     Error_Handler();
@@ -434,10 +456,10 @@ static void MX_GPIO_Init(void)
 
 void board_detect()
 {
-	int gpioval;
-	GPIO_InitTypeDef GPIO_InitStruct;
+//	int gpioval;
+//	GPIO_InitTypeDef GPIO_InitStruct;
 
-	__HAL_RCC_GPIOB_CLK_ENABLE();
+//	__HAL_RCC_GPIOB_CLK_ENABLE();
 
 	/* Set pb4 to a low output on power up, then right after flip to an input without pull-up.
 	 * The line is floating on pt1 and it will read 0
