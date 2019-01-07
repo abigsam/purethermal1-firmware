@@ -4,7 +4,7 @@
   * Description        : This file contains the common defines of the application
   ******************************************************************************
   *
-  * COPYRIGHT(c) 2016 STMicroelectronics
+  * COPYRIGHT(c) 2019 STMicroelectronics
   *
   * Redistribution and use in source and binary forms, with or without modification,
   * are permitted provided that the following conditions are met:
@@ -44,28 +44,17 @@ extern unsigned int pt_hse_value;
 
 /* Private define ------------------------------------------------------------*/
 
-#define LEPTON_GPIO3_Pin GPIO_PIN_13
-#define LEPTON_GPIO3_GPIO_Port GPIOC
-#define ESP_GPIO2_Pin GPIO_PIN_0
-#define ESP_GPIO2_GPIO_Port GPIOA
-#define ESP_GPIO0_Pin GPIO_PIN_1
-#define ESP_GPIO0_GPIO_Port GPIOA
-#define PB_STAT_Pin GPIO_PIN_4
+#define PB_STAT_Pin GPIO_PIN_0
 #define PB_STAT_GPIO_Port GPIOA
-#define ESP_CH_PD_Pin GPIO_PIN_5
-#define ESP_CH_PD_GPIO_Port GPIOA
-#define SYSTEM_LED_Pin GPIO_PIN_6
+#define LEPTON_GPIO3_Pin GPIO_PIN_1
+#define LEPTON_GPIO3_GPIO_Port GPIOA
+#define LEPTON_GPIO3_EXTI_IRQn EXTI1_IRQn
+#define SYSTEM_LED_Pin GPIO_PIN_9
 #define SYSTEM_LED_GPIO_Port GPIOA
-#define ESP_RST_Pin GPIO_PIN_7
-#define ESP_RST_GPIO_Port GPIOA
 #define LEPTON_PW_DWN_L_Pin GPIO_PIN_8
-#define LEPTON_PW_DWN_L_GPIO_Port GPIOA
+#define LEPTON_PW_DWN_L_GPIO_Port GPIOB
 #define LEPTON_RESET_L_Pin GPIO_PIN_9
-#define LEPTON_RESET_L_GPIO_Port GPIOA
-#define BUCK_ON_Pin GPIO_PIN_5
-#define BUCK_ON_GPIO_Port GPIOB
-#define LDO_ON_Pin GPIO_PIN_7
-#define LDO_ON_GPIO_Port GPIOB
+#define LEPTON_RESET_L_GPIO_Port GPIOB
 /* USER CODE BEGIN Private defines */
 
 /* USER CODE END Private defines */

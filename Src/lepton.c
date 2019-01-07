@@ -21,7 +21,8 @@
 #define LEPTON_PW_DWN_HIGH	HAL_GPIO_WritePin(GPIOA, GPIO_PIN_8, GPIO_PIN_SET)
 #define LEPTON_PW_DWN_LOW	HAL_GPIO_WritePin(GPIOA, GPIO_PIN_8, GPIO_PIN_RESET)
 
-extern SPI_HandleTypeDef hspi2;
+//extern SPI_HandleTypeDef hspi2;
+extern SPI_HandleTypeDef hspi3;
 
 // These replace HAL library functions as they're a lot shorter and more specialized
 static inline HAL_StatusTypeDef start_lepton_spi_dma(DMA_HandleTypeDef *hdma, uint32_t SrcAddress, uint32_t DstAddress, uint32_t DataLength);
@@ -44,7 +45,7 @@ void lepton_transfer(lepton_buffer *buf, int nlines)
 
   int packet_size = FRAME_HEADER_LENGTH +
 		  ((g_format_y16 ? sizeof(uint16_t) : sizeof(rgb_t)) * FRAME_LINE_LENGTH) / sizeof(uint16_t);
-  status = setup_lepton_spi_rx(&hspi2, buf->lines.data, packet_size * nlines);
+  status = setup_lepton_spi_rx(&hspi3, buf->lines.data, packet_size * nlines);
 
   if (status != HAL_OK)
   {
@@ -85,23 +86,23 @@ void lepton_init(void )
 	HAL_Delay(190);
   LEPTON_RESET_L_HIGH;
 
-  hspi2.hdmarx->XferCpltCallback = lepton_spi_rx_dma_cplt;
+  hspi3.hdmarx->XferCpltCallback = lepton_spi_rx_dma_cplt;
 
   /* Set the SPI Tx DMA transfer complete callback as NULL because the communication closing
   is performed in DMA reception complete callback  */
-  hspi2.hdmatx->XferCpltCallback = NULL;
-  hspi2.hdmatx->XferErrorCallback = NULL;
+  hspi3.hdmatx->XferCpltCallback = NULL;
+  hspi3.hdmatx->XferErrorCallback = NULL;
 
   /* Clear DBM bit */
-  hspi2.hdmarx->Instance->CR &= (uint32_t)(~DMA_SxCR_DBM);
-  hspi2.hdmatx->Instance->CR &= (uint32_t)(~DMA_SxCR_DBM);
+  hspi3.hdmarx->Instance->CR &= (uint32_t)(~DMA_SxCR_DBM);
+  hspi3.hdmatx->Instance->CR &= (uint32_t)(~DMA_SxCR_DBM);
 
   /*Init field not used in handle to zero */
-  hspi2.RxISR = 0;
-  hspi2.TxISR = 0;
+  hspi3.RxISR = 0;
+  hspi3.TxISR = 0;
 
   /* Enable SPI peripheral */
-  __HAL_SPI_ENABLE(&hspi2);
+  __HAL_SPI_ENABLE(&hspi3);
 
   init_lepton_task();
 }
